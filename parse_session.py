@@ -21,13 +21,6 @@ import argparse
 from datetime import datetime, timezone
 from pathlib import Path
 
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.trace import StatusCode
-
 
 def parse_timestamp(ts_str: str) -> datetime:
     """ISO 8601 タイムスタンプをパース"""
@@ -188,6 +181,13 @@ def export_traces(session_path: Path, endpoint: str, dry_run: bool = False):
             tools = ", ".join(tc["name"] for tc in turn["tool_calls"]) or "(no tools)"
             print(f"  Turn {i+1}: {len(turn['tool_calls'])} tools [{tools}]")
         return
+
+    from opentelemetry import trace
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+    from opentelemetry.trace import StatusCode
 
     # OTel セットアップ
     resource = Resource.create({
