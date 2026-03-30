@@ -42,6 +42,8 @@ python parse_session.py session.jsonl --dry-run
 
 ### セッションを分析（OTel なし）
 
+#### Claude Code セッション
+
 ```bash
 # 指定したセッションを分析
 python analyze_session.py session.jsonl
@@ -55,6 +57,25 @@ python analyze_session.py session.jsonl --format json --pretty-json
 # 引数なしで直近の大きいセッションを自動分析
 python analyze_session.py
 ```
+
+#### vibe-local セッション
+
+```bash
+# telemetry summary を含む vibe-local セッションを分析
+python analyze_vibe_local.py session.jsonl
+
+# JSONで機械可読出力
+python analyze_vibe_local.py session.jsonl --format json
+
+# JSONを整形して出力
+python analyze_vibe_local.py session.jsonl --format json --pretty-json
+```
+
+`analyze_vibe_local.py` は、通常の chat message 行に加えて `record_type` を持つ
+非メッセージ telemetry record が JSONL に混在している前提で動作する。
+`vibe_local_telemetry` の state record を優先して読み取り、必要なら summary 互換 payload
+にもフォールバックする。telemetry record が見つからない場合は、新しい telemetry
+形式のセッションが必要であることを示すエラーメッセージを返す。
 
 出力例:
 
