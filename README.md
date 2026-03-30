@@ -77,6 +77,25 @@ python analyze_vibe_local.py session.jsonl --format json --pretty-json
 にもフォールバックする。telemetry record が見つからない場合は、新しい telemetry
 形式のセッションが必要であることを示すエラーメッセージを返す。
 
+#### GitHub Copilot CLI セッション
+
+```bash
+# Copilot CLI の events.jsonl を分析
+python analyze_copilot.py ~/.copilot/session-state/<session-id>/events.jsonl
+
+# JSONで機械可読出力
+python analyze_copilot.py ~/.copilot/session-state/<session-id>/events.jsonl --format json
+
+# one-prompt バッチのうち特定 exercise-worker だけを分析
+python analyze_copilot.py ~/.copilot/session-state/<session-id>/events.jsonl --format json --exercise acronym
+```
+
+`analyze_copilot.py` は Copilot CLI の `events.jsonl` を読み取り、全体セッションでは
+`session.shutdown.modelMetrics` を使って token usage を集計する。`--exercise` を渡した
+場合は、対応する `Solve <exercise>` task / `exercise-worker` subtree に絞って、ツール呼び出し、
+エラー、duration、worker-scope token usage を既存スキーマへ正規化する。cache read は
+その scope で明示的に出てきた場合だけ別計上し、見えていない値は推測しない。
+
 出力例:
 
 ```
