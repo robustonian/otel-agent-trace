@@ -46,6 +46,12 @@ python parse_session.py session.jsonl --dry-run
 # 指定したセッションを分析
 python analyze_session.py session.jsonl
 
+# JSONで機械可読出力
+python analyze_session.py session.jsonl --format json
+
+# JSONを整形して出力
+python analyze_session.py session.jsonl --format json --pretty-json
+
 # 引数なしで直近の大きいセッションを自動分析
 python analyze_session.py
 ```
@@ -59,6 +65,21 @@ python analyze_session.py
   Agent           6回 ( 4.6%)  平均 50.4s  合計   252s
   Read            6回 ( 4.6%)  平均  0.0s  合計     0s
 ```
+
+JSON出力には以下が含まれる:
+
+- セッション期間、イベント数、ターン数
+- ツール別集計（回数、比率、平均/合計時間、エラー数）
+- カテゴリ別集計
+- トークン使用量
+- 時間帯別アクティビティ
+- 最遅ターン一覧
+- ターン間待機時間
+- セッションメタデータ（CLIバージョン、entrypoint、assistant model など）
+
+この JSON は `ts-bench` など別ツールから機械的に取り込む用途を想定している。
+
+`parse_session.py --dry-run` は OpenTelemetry 依存なしで動作し、セッション構造の確認だけを行える。
 
 ## Span 設計
 
